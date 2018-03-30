@@ -34,13 +34,13 @@ fig, ax = plt.subplots(figsize=figsize)
 major_ticks = np.arange(2000, 2020, 1)
 minor_ticks = np.arange(2000, 2020, 0.5)
 
-ax.set_xticks(major_ticks)
-ax.set_xticks(minor_ticks, minor=True)
-ax.grid(which='both')
-ax.grid(which='minor', alpha=0.2)
-ax.grid(which='major', alpha=0.5)
+# ax.set_xticks(major_ticks)
+# ax.set_xticks(minor_ticks, minor=True)
+# ax.grid(which='both')
+# ax.grid(which='minor', alpha=0.2)
+# ax.grid(which='major', alpha=0.5)
 
-ax.set_xlabel('Years')
+# ax.set_xlabel('Years')
 # ax.set_ylabel('Rating')
 #
 # ax.plot(df_new.R, label='Rt E-5')
@@ -53,37 +53,39 @@ ax.set_xlabel('Years')
 
 # regression = smf.ols(y=df_new.R, x=df_new.year)
 # regression.summary
-x = df_new.year
-y = df_new.R
+# x = df_new.year
+# y = df_new.R
 
 # model = LinearRegression(normalize=True)
 # model.fit(df_new.year, df_new.R)
 # # calculate trend
 # trend = model.predict(df_new.R)
 
-model = sm.formula.ols(formula='R ~ year', data=df_new)
-res = model.fit()
-print(res.summary())
-df.assign(fit=res.fittedvalues).plot(x='year', y='R', ax=ax)
+# model = sm.formula.ols(formula='R ~ year', data=df_new)
+# res = model.fit()
+# print(res.summary())
+# df_new.assign(fit=res.fittedvalues).plot(x='year', y='R', ax=ax)
+#
+# model_ = sm.formula.ols(formula='Ris ~ year', data=df_new)
+# res_ = model_.fit()
+# print(res_.summary())
+# df_new.assign(fit=res_.fittedvalues).plot(x='year', y='Ris', ax=ax)
 
-model_ = sm.formula.ols(formula='Ris ~ year', data=df_new)
-res_ = model_.fit()
-print(res_.summary())
-df.assign(fit=res_.fittedvalues).plot(x='year', y='Ris', ax=ax)
-
-
-#coefficients, residuals, _, _, _ = np.polyfit(range(len(df.index)), df, 1, full=True)
+# coefficients, residuals, _, _, _ = np.polyfit(range(len(df.index)), df, 1, full=True)
 # plt.plot([coefficients[0]*x + coefficients[1] for x in range(len(df))])
-# params = np.polyfit(x, y, 2020)
-#
-# xp = np.linspace(x.min(), 1990, 2020)
-# yp = np.polyval(params, xp)
-# sig = np.std(y - np.polyval(params, x))
-# plt.fill_between(xp, yp - sig, yp + sig,
-#                  color='k', alpha=0.2)
-#
 
-# sns.lmplot(x='year', y='R', data=df, x_estimator=np.mean, logistic=True, y_jitter=.03)
-# sns.jointplot(x='year', y='R', data=df, kind="reg");
+x = df_new.K
+y = df_new.R
+params = np.polyfit(x, y, 10)
+
+xp = np.linspace(x.min(), 0, 10)
+yp = np.polyval(params, xp)
+sig = np.std(y - np.polyval(params, x))
+plt.fill_between(xp, yp - sig, yp + sig, color='k', alpha=0.2)
+
+# sns.lmplot(x='K', y='R', data=df, x_estimator=np.mean, logistic=True, y_jitter=.03)
+# sns.jointplot(x='K', y='R', data=df, kind="reg")
+sns.regplot(x="K", y="R", data=df)
+sns.regplot(x="K", y="Ris", data=df)
 plt.show()
-fig.savefig('data_04.01.svg', dpi=fig.dpi)
+fig.savefig('data_04.02.svg', dpi=fig.dpi)
