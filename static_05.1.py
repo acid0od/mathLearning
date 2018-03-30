@@ -8,7 +8,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import statsmodels.api as sm
 
 from sklearn.linear_model import LinearRegression
-
+import statsmodels.api as sm
 
 def normalize(df):
     result = df.copy()
@@ -19,15 +19,42 @@ def normalize(df):
     return result
 
 
-figsize = (14, 4.75)
-df = pd.read_csv('data_04.csv', sep='|', header=None,
+figsize = (14, 14)
+df = pd.read_csv('data_5.csv', sep='|', header=None,
                  dtype={'year': np.int64, 'urban': np.float, 'sh': np.float, 'R': np.float, 'K': np.float,
                         'disaster': np.float, 'Ris': np.float},
-                 names=['year', 'urban', 'sh', 'R', 'K', 'disaster', 'Ris'])
+                 names=['year', 'urban', 'sh', 'Sum', 'Rt', 'Zt', 'Rnt'])
 df.replace('N/A', np.NaN)
+df.index = df.Rt
+df = df.sort_values(by=['Rt'])
 
-df_new = normalize(df)
-df_new.index = df.year
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize)
+#ax1.set_title('Rt from Sum')
+ax1.plot(df.Sum)
+ax2.set_title('Rt from Rtn')
+ax2.plot(df.Rnt)
+
+lm_original = np.polyfit(df.Rt, df.Sum, 1)
+r_x, r_y = zip(*((i, i*lm_original[0] + lm_original[1]) for i in df.Rt))
+
+lm_original_plot = pd.DataFrame({
+'Rt' : r_x,
+'Sum' : r_y
+})
+
+df.plot(kind='scatter', color='Blue', x='Rt', y='Sum', ax=ax1, title='Rt from Sum')
+lm_original_plot.plot(kind='line', color='Red', x='Rt', y='Sum', ax=ax1)
+
+model = sm.formula.ols(formula='Rt ~ Sum', data=df)
+res = model.fit()
+print(res.summary())
+df['mdd'] = res.predict(df)
+df.plot(x='Rt', y='mdd', ax=ax1)
+
+# Print out the statistics
+
+# ax.scatter(x=df.Rt, y=df.Rnt, label='Data')
+# ax.scatter(x=df.Rt, y=df.Sum, label='Data +++')
 
 # fig, ax = plt.subplots(figsize=figsize)
 
@@ -76,14 +103,6 @@ df_new.index = df.year
 # major_ticks = np.arange(2000, 2020, 1)
 # minor_ticks = np.arange(2000, 2020, 0.5)
 
-fig = plt.figure(figsize=(10,10))
-ax = fig.add_subplot(111)
-ax.set_title('ADR vs Rating (CS:GO)')
-ax.scatter(x=df.K, y=df.Ris, label='Data')
-
-ab = fig.add_subplot(211)
-ab.set_title('K of R')
-ab.scatter(x=df.K, y=df.R, label='Data')
 # plt.plot(df[:,0], m * df[:,0] + b, color='red', label='Our Fitting Line')
 # ax.set_xlabel('ADR')
 # ax.set_ylabel('Rating')
@@ -103,4 +122,4 @@ ab.scatter(x=df.K, y=df.R, label='Data')
 # sns.regplot(x="K", y="R", data=df)
 # sns.regplot(x="K", y="Ris", data=df)
 plt.show()
-fig.savefig('data_04.02.svg', dpi=fig.dpi)
+fig.savefig('data_05.01.svg', dpi=fig.dpi)
