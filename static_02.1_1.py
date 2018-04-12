@@ -21,7 +21,7 @@ df.replace('N/A', np.NaN)
 df_new = normalize(df)
 df_new.index = df.year
 
-df = df_new.sort_values(by=['year'])
+df_new = df_new.sort_values(by=['year'])
 
 # x = np.linspace(-3, 3, 50)
 # y = np.exp(-x**2) + 0.1 * np.random.randn(50)
@@ -35,17 +35,17 @@ df = df_new.sort_values(by=['year'])
 # plt.plot(xs, spl(xs), 'b', lw=3)
 
 x = np.linspace(df.year.min(), df.year.max(), num=21)
-y = df.disaster
+y = df_new.disaster
 
 spl = UnivariateSpline(x, y)
 
 fig, ax = plt.subplots(figsize=figsize)
-xs = np.linspace(df.year.min(), df.year.max(), num=1000)
+xs = np.linspace(x.min(), x.max(), num=1000)
 
 plt.plot(x, y, 'ro', ms=5)
 plt.plot(xs, spl(xs), 'g', lw=3)
 
-spl.set_smoothing_factor(0.5)
+spl.set_smoothing_factor(0.0005)
 plt.plot(xs, spl(xs), 'b', lw=3)
 
 # x_smooth = np.linspace(df.year.min(), df.year.max(), num=300)
@@ -65,21 +65,21 @@ plt.plot(xs, spl(xs), 'b', lw=3)
 #
 # print(y_smooth)
 
-# major_ticks = np.arange(1990, 2020, 1)
-# minor_ticks = np.arange(1990, 2020, 0.5)
+major_ticks = np.arange(1997, 2018, 1)
+minor_ticks = np.arange(1997, 2018, 0.5)
 #
-# ax.set_xticks(major_ticks)
-# ax.set_xticks(minor_ticks, minor=True)
-# ax.grid(which='both')
-# ax.grid(which='minor', alpha=0.2)
-# ax.grid(which='major', alpha=0.5)
+ax.set_xticks(major_ticks)
+ax.set_xticks(minor_ticks, minor=True)
+ax.grid(which='both')
+ax.grid(which='minor', alpha=0.2)
+ax.grid(which='major', alpha=0.5)
 #
 # ax.plot(df_new.hc)
 # ax.plot(df_new.hc, ls="", marker="o", label="points")
 #
 # ax.plot(df_new.disaster)
 # ax.plot(df_new.disaster, ls="", marker="^", label="points")
-# plt.xticks(rotation=90)
+plt.xticks(rotation=90)
 # plt.plot(x_smooth, y_smooth)
 # plt.plot(df.year, df.disaster)
 
