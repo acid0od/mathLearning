@@ -5,6 +5,8 @@ import seaborn as sns
 import sklearn.preprocessing as pr
 from scipy.interpolate import spline
 from scipy.interpolate import UnivariateSpline
+
+
 def normalize(df):
     result = df.copy()
     for feature_name in df.columns:
@@ -42,12 +44,13 @@ spl = UnivariateSpline(x, y)
 fig, ax = plt.subplots(figsize=figsize)
 xs = np.linspace(x.min(), x.max(), num=1000)
 
-plt.plot(x, y, 'ro', ms=5)
-plt.plot(xs, spl(xs), 'g', lw=3)
+
+plt.plot(xs, spl(xs), 'g', lw=3, label="interpolate as univariate spline")
 
 spl.set_smoothing_factor(0.0005)
-plt.plot(xs, spl(xs), 'b', lw=3)
-
+plt.plot(xs, spl(xs), 'b', lw=3, label="With smoothing factor 0.0005")
+plt.plot(x, y, 'ro', ms=5, label="Disasters")
+plt.legend(loc='upper right')
 # x_smooth = np.linspace(df.year.min(), df.year.max(), num=300)
 # spl = UnivariateSpline(x_smooth, df.disaster)
 #
@@ -73,6 +76,10 @@ ax.set_xticks(minor_ticks, minor=True)
 ax.grid(which='both')
 ax.grid(which='minor', alpha=0.2)
 ax.grid(which='major', alpha=0.5)
+
+ax.set_title('Disasters by years ', color='red')
+ax.set_xlabel('Yeas', color='red')
+ax.set_ylabel('Disasters', color='red')
 #
 # ax.plot(df_new.hc)
 # ax.plot(df_new.hc, ls="", marker="o", label="points")
