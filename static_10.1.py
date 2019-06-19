@@ -21,14 +21,17 @@ figsize = (14, 4.75)
 df = pd.read_csv('data_10.csv', sep='|', header=None, dtype={'aria': np.str, 'vicor': np.float, 'z1': np.float, 'z2': np.float, 's1': np.float, 'ch1': np.float, 'ch2': np.float, 'k': np.float },
                  names=['aria', 'vicor', 'z1', 'z2', 's1', 'ch1', 'ch2', 'k'])
 df.replace('N/A', np.NaN)
+
+# Нормализуем данные
 df_new = normalize(df)
 df_new.index = df.aria
+
+# Регулируем количество колонок для печати результатов обсчета
 pd.set_option("display.max_columns", 102)
 
 fig, ax = plt.subplots(figsize=figsize)
-# print(df_new)
 
-# Исключаем информацию об образцах зерна, сохраняем для дальнейшего использования
+# Исключаем информацию об областях, сохраняем для дальнейшего использования
 varieties = list(df_new.pop('aria'))
 
 # Извлекаем измерения как массив NumPy
@@ -41,9 +44,9 @@ mergings = linkage(samples, method='complete')
 dendrogram(mergings,
            labels=varieties,
            leaf_rotation=90,
-           leaf_font_size=6,
+           leaf_font_size=10,
            )
 
 plt.show()
 
-fig.savefig('/tmp/data_10.01.svg', dpi=fig.dpi)
+fig.savefig('/tmp/data_10.02.svg', dpi=fig.dpi)
