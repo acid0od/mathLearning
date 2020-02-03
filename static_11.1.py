@@ -18,8 +18,8 @@ def normalize(df):
 
 
 figsize = (14, 4.75)
-df = pd.read_csv('data_10.csv', sep='|', header=None, dtype={'aria': np.str, 'vicor': np.float, 'z1': np.float, 'z2': np.float, 's1': np.float, 'ch1': np.float, 'ch2': np.float, 'k': np.float },
-                 names=['aria', 'vicor', 'z1', 'z2', 's1', 'ch1', 'ch2', 'k'])
+df = pd.read_csv('data_11.csv', sep='|', header=None, dtype={'aria': np.str, 'u': np.float, 't1': np.float, 'r2': np.float, 'r2': np.float},
+                 names=['aria', 'u', 't1', 'r1', 'r2'])
 df.replace('N/A', np.NaN)
 
 # Нормализуем данные
@@ -28,6 +28,7 @@ df_new.index = df.aria
 
 # Регулируем количество колонок для печати результатов обсчета
 pd.set_option("display.max_columns", 102)
+
 print(df_new)
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -50,4 +51,4 @@ dendrogram(mergings,
 
 plt.show()
 
-fig.savefig('/tmp/data_10.04.svg', dpi=fig.dpi)
+fig.savefig('/tmp/data_11.1.svg', dpi=fig.dpi)
